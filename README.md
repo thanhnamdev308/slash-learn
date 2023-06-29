@@ -141,15 +141,15 @@ def test_probabilistic():
 slash run /path/to/tests
 ```
 
-- Stopping at the __first unsuccessful test__ with the`-x` flag.
+Stopping at the __first unsuccessful test__ with the`-x` flag.
 
 2. __Loading Tests from Files:__
 ```bash
 slash run -f file1.txt -f file2.txt
 ```
-- Lines in suite files can optionally contain filters and repeat directive.
+Lines in suite files can optionally contain filters and repeat directive.
 
-- Filter allows restricting the tests actually loaded from them:
+Filter allows restricting the tests actually loaded from them:
 ```
 # my_suite_file.txt
 
@@ -159,7 +159,7 @@ slash run -f file1.txt -f file2.txt
 # when running the following file, tests with "dangerous" in their name will not be loaded
 /path/to/other_tests.py # filter: not dangerous
 ```
-- Repeat allows to repeat a line:
+Repeat allows to repeat a line:
 ```
 # my_suite_file.txt
 
@@ -176,15 +176,15 @@ slash run -i /path/to/tests
 ```
 
 4. __Including and Excluding Tests:__
-- Only run tests containing the substring in their names:
+Only run tests containing the substring in their names:
 ```bash
 slash run -k substr /path/to/tests
 ```
-- Use `not X` to exclude any test containing `X` in their names:
+Use `not X` to exclude any test containing `X` in their names:
 ```bash
 slash run -k 'not failing_' /path/to/tests
 ```
-- Use a more complex expression involving or and and:
+Use a more complex expression involving or and and:
 ```bash
 slash run -k 'not failing_ and components' /path/to/tests
 ```
