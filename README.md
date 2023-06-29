@@ -40,7 +40,9 @@ def test_addition():
     assert 2 + 2 == 4
 ```
 
-4. __Test Parameters:__ Slash tests can be parametrized, iterating parameter values and __creating separate cases__ for each value:
+4. __Test Parameters:__
+
+Slash tests can be parametrized, iterating parameter values and __creating separate cases__ for each value:
 ```python
 @slash.parametrize('x', [1, 2, 3])
 def test_something(x):
@@ -58,7 +60,9 @@ def test_power_of_two(with_power_operator):
     assert result == 4
 ```
 
-5. __Logging:__ Slash uses [Logbook](https://logbook.readthedocs.io/en/stable/) for logging and exposes __a global logger__:
+5. __Logging:__
+
+Slash uses [Logbook](https://logbook.readthedocs.io/en/stable/) for logging and exposes __a global logger__:
 ```python
 import slash
 
