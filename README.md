@@ -176,6 +176,7 @@ slash run -i /path/to/tests
 ```
 
 4. __Including and Excluding Tests:__
+
 Only run tests containing the substring in their names:
 ```bash
 slash run -k substr /path/to/tests
