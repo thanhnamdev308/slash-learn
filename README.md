@@ -9,7 +9,7 @@ It provides facilities and best practices for testing complete products, and not
 - [Get Started](#get-started)
 - [Running test](#running-test)
 - [Test fixture](#test-fixture)
-- [Test report](#test-report)
+- [Test coverage](#test-coverage)
 - [Some notable knowledge](#some-notable-knowledge)
 
 # Get Started
@@ -212,9 +212,54 @@ In testing, a __fixture__ provides a defined, reliable and consistent context fo
 - Support to add the interable parameters for the fixture
 - Setup and Teardown: the fixture support the feature to init at the begin of the tests and it also support to execute a function after the test finished.
 
+__Slash Fixture Scope:__ We say that fixtures, by default, have a __scope of a single test__, or __test scope__. Slash also supports __session__ and __module__ scoped fixtures. Session fixtures live from the moment of their activation until the end of the test session, while module fixtures live until the last test of the module that needed them finished execution.
+```python
+@slash.fixture(scope='session')
+def some_session_fixture(this):
+    @this.add_cleanup
+    def cleanup():
+        print('Hurray! the session has ended')
 
-# Test report
 
+@slash.fixture(scope='module')
+def some_module_fixture(this):
+    @this.add_cleanup
+    def cleanup():
+        print('Hurray! We are finished with this module')
+```
+Test Start/End for Widely Scoped Fixtures done via the `this.test_start` and `this.test_end` callbacks, which are specific to the current fixture.
+```python
+@slash.fixture(scope='module')
+def background_process(this):
+    process = SomeComplexBackgroundProcess()
+
+    @this.test_start
+    def on_test_start():
+        process.make_sure_still_running()
+
+    @this.test_end
+    def on_test_end():
+        process.make_sure_no_errors()
+
+    process.start()
+
+    this.add_cleanup(process.stop)
+```
+
+__Listing Available Fixtures:__
+```bash
+slash list –only-fixtures path/to/tests
+```
+
+# Test coverage
+Slash has a built-in plugin to report coverage, using [Coverage.py](https://coverage.readthedocs.io/en/7.2.7/).
+
+To use it, run Slash with `--with-coverage`, and optionally specify modules to cover:
+```bash
+slash run --with-coverage --cov mypackage --cov-report html
+```
+
+_See also: [Other Built-in Plugins](https://slash.readthedocs.io/en/master/builtin_plugins.html)._
 
 # Some notable knowledge
 - [Logging](https://slash.readthedocs.io/en/master/logging.html#logging) (Logs timestamps, color, highlights,... )
