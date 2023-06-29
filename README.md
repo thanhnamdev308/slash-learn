@@ -10,6 +10,8 @@ It provides facilities and best practices for testing complete products, and not
 - [Running test](#running-test)
 - [Test fixture](#test-fixture)
 - [Test coverage](#test-coverage)
+- [.slashrc](#slashrc)
+- [Hooks](#hooks)
 - [Some notable knowledge](#some-notable-knowledge)
 
 # Get Started
@@ -40,9 +42,7 @@ def test_addition():
     assert 2 + 2 == 4
 ```
 
-4. __Test Parameters:__
-
-Slash tests can be parametrized, iterating parameter values and __creating separate cases__ for each value:
+4. __Test Parameters:__ Slash tests can be parametrized, iterating parameter values and __creating separate cases__ for each value:
 ```python
 @slash.parametrize('x', [1, 2, 3])
 def test_something(x):
@@ -60,9 +60,7 @@ def test_power_of_two(with_power_operator):
     assert result == 4
 ```
 
-5. __Logging:__
-
-Slash uses [Logbook](https://logbook.readthedocs.io/en/stable/) for logging and exposes __a global logger__:
+5. __Logging:__ Slash uses [Logbook](https://logbook.readthedocs.io/en/stable/) for logging and exposes __a global logger__:
 ```python
 import slash
 
@@ -180,7 +178,6 @@ slash run -i /path/to/tests
 ```
 
 4. __Including and Excluding Tests:__
-
 Only run tests containing the substring in their names:
 ```bash
 slash run -k substr /path/to/tests
@@ -265,6 +262,50 @@ slash run --with-coverage --cov mypackage --cov-report html
 ```
 
 _See also: [Other Built-in Plugins](https://slash.readthedocs.io/en/master/builtin_plugins.html)._
+
+# .slashrc
+Slash loads the `.slashrc` file when it loads.
+
+`.slashrc` file has to be placed at the root directory of the repo or the project.
+
+Slash uses a hierarchical configuration structure provided by confetti.
+
+In `.slashrc` file, we can set value for the slash config value, extend config and provide our own config.
+
+The config is located in `slash.config` object and all slash config is under `slash.config.root`.
+
+```python
+# Example of .slashrc file
+
+import os
+import slash
+from confetti import Config
+import plugin
+
+slash.config.root.log.root = os.path.join(os.path.dirname(__file__), 'log')
+slash.config.root.run.default_sources = ['feature_one', 'feature_two']
+# slash.config.root.log.show_raw_param_values = True
+slash.config.root.log.unified_session_log = True
+
+slash.config.extend(
+    Config(
+        {'cluster': {'ip': "10.0.0.4", "username": "root"}}
+    )
+)
+
+```
+
+_See: [List of Available Configuration Values](https://slash.readthedocs.io/en/master/configuration.html#configuration)_
+
+# Hooks
+__Hooks__ are endpoints to which you can register callbacks to be called in specific points in a test session lifetime.
+
+All built-in hooks are all kept as globals in the `slash.hooks` module
+
+To register a method to be executed in specific point:
+- The method has to be decorated as `@slash.hooks.hook_nmae.register`
+
+_See: [Available Hooks](https://slash.readthedocs.io/en/master/configuration.html#configuration)_
 
 # Some notable knowledge
 - [Logging](https://slash.readthedocs.io/en/master/logging.html#logging) (Logs timestamps, color, highlights,... )
