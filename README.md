@@ -12,6 +12,7 @@ It provides facilities and best practices for testing complete products, and not
 - [Test coverage](#test-coverage)
 - [.slashrc](#slashrc)
 - [Hooks](#hooks)
+- [Tags](#tags)
 - [Some notable knowledge](#some-notable-knowledge)
 
 # Get Started
@@ -306,6 +307,38 @@ To register a method to be executed in specific point:
 - The method has to be decorated as `@slash.hooks.hook_nmae.register`
 
 _See: [Available Hooks](https://slash.readthedocs.io/en/master/configuration.html#configuration)_
+
+# Tags
+Slash supports organizing test by tagging them:
+```python
+@slash.tag('dangerous')
+def test_something:
+    ...
+```
+
+You can also make alias for tags:
+```python
+dangerous = slash.tag('dangerous')
+
+@dangerous
+def test_something:
+    ...
+```
+
+Tags can also have values:
+```python
+@slash.tag('covers', 'requirement_1294')
+def test_something:
+    ...
+```
+
+Running tests filtered by tags:
+```bash
+slash run /path/to/tests -k 'not tag:dangerous'
+```
+```bash
+slash run /path/to/tests -k 'tag:covers=requirement_1294'
+```
 
 # Some notable knowledge
 - [Logging](https://slash.readthedocs.io/en/master/logging.html#logging) (Logs timestamps, color, highlights,... )
